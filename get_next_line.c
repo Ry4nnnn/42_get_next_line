@@ -49,25 +49,38 @@ static int	ft_read(int fd, void **buff, int *bytes)
 char *get_next_line(int fd)
 {
 	char *buff;
+	int bytes;
+	static char *res;
+	char *temp;
 
 	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1)
 		return (NULL);
 	buff = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buff)
 		return (NULL);
-	while (ft_read(fd, buff, size) > 0)
+	while (ft_read(fd, &buff, &bytes) > 0)
 	{
-		buff 
+		buff[bytes] = 0;
+		if (!res)
+			res = ft_strdup("");
+		temp = ft_strjoin(res, buff);
+		ft_free(&res);
+		res = temp;
+		if (ft_strchr(buff, '\n'))
+			break;
 	}
+	ft_free(&buff);
+	if (bytes < 0 || (bytes = 0 && !res))
+		return (0);
+	return (get_nextline(&res));
 }
 
-
-int	main()
-{
-    int fd = open("test.txt", O_RDONLY);
-	printf("%s\n",get_next_line(fd));
-	// printf("\n second run ------------------------- \n");
-	// printf("%s\n",get_next_line(fd));
-	// printf("\n third run ------------------------- \n");
-	// printf("%s\n",get_next_line(fd));
-}
+// int	main()
+// {
+//     int fd = open("test.txt", O_RDONLY);
+// 	printf("%s\n",get_next_line(fd));
+// 	printf("\n second run ------------------------- \n");
+// 	printf("%s\n",get_next_line(fd));
+// 	printf("\n third run ------------------------- \n");
+// 	printf("%s\n",get_next_line(fd));
+// }
