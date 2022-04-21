@@ -21,19 +21,9 @@ static char	*ft_strdup(const char *s)
 	return (dst);
 }
 
-//this function is to free a pointer and null terminating it.
-static void	ft_free(char *str)
-{
-	if (str)
-	{
-		free(*str);
-		*str = NULL;
-	}
-}
-
 //this function read from a fd
 //set number of bytes readed from the fd and returns it
-static int	ft_read(int fd, void **buff, int *bytes)
+static int	ft_read(int fd, char **buff, int *bytes)
 {
 	int res;
 
@@ -42,10 +32,53 @@ static int	ft_read(int fd, void **buff, int *bytes)
 	return (res);
 }
 
+//this function is to free a pointer and null terminating it.
+static void	ft_free(char **str)
+{
+	if (str)
+	{
+		free(*str);
+		*str = NULL;
+	}
+}
+//this function is to extract a string containing newline
+//when buffer contains a newline this func will be called
+//loops through the buffer to find a newline
+//when newline is found, trims the string from the start to the newline
+//remainder will be duplicated into temp, str will be free,
+//and temp will be assigned to str, str now contains
+//the remainder of the string
+//will get stored in str for next call
+static char	*get_nextline(char **str)
+{
+	size_t	i;
+	char	*temp;
+	char	*res;
+
+	i = 0;
+	while (*str[i] != '\0' && *str[i] != '\n')
+		i++;
+	if ((*str)[i])
+	{
+		res = ft_substr(*str, 0, i + 1);
+		temp = ft_strdup(*str + i + 1);
+		ft_free(str);
+		if (temp[0] != '\0')
+			*str = temp;
+		else
+			ft_free(&temp);
+	}
+	else
+	{
+		res = ft_strdup(*str);
+		ft_free(str);
+	}
+	return (res);
+}
+
 // main function of get next line
 // check if buffer size is more then 0
 // use ft_read function to read from a fd
-// 
 char *get_next_line(int fd)
 {
 	char *buff;
@@ -74,13 +107,3 @@ char *get_next_line(int fd)
 		return (0);
 	return (get_nextline(&res));
 }
-
-// int	main()
-// {
-//     int fd = open("test.txt", O_RDONLY);
-// 	printf("%s\n",get_next_line(fd));
-// 	printf("\n second run ------------------------- \n");
-// 	printf("%s\n",get_next_line(fd));
-// 	printf("\n third run ------------------------- \n");
-// 	printf("%s\n",get_next_line(fd));
-// }
