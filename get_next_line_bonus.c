@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: welim <welim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/22 14:24:31 by welim             #+#    #+#             */
-/*   Updated: 2022/04/22 16:02:36 by welim            ###   ########.fr       */
+/*   Created: 2022/04/22 16:06:21 by welim             #+#    #+#             */
+/*   Updated: 2022/04/22 16:06:23 by welim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 //this function allocates memory and duplicate a string
 static char	*ft_strdup(const char *s)
@@ -91,17 +91,12 @@ static char	*get_newline(char **str)
 // main function of get next line
 // check if buffer size is more then 0
 // use ft_read function to read from a fd
-//read the fd by the buff size while its not the end
-//check the buff size if there is any new lines
-//if there is, stop reading and trim the buffer and return it
-//it will continue reading if there is no new line
-//return null for error handling or end of file reached
 char	*get_next_line(int fd)
 {
 	int			bytes;
 	char		*buff;
 	char		*temp;
-	static char	*res;
+	static char	*res[1024];
 
 	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1)
 		return (NULL);
@@ -111,37 +106,16 @@ char	*get_next_line(int fd)
 	while (ft_read(fd, &buff, &bytes) > 0)
 	{
 		buff[bytes] = 0;
-		if (!res)
-			res = ft_strdup("");
-		temp = ft_strjoin(res, buff);
-		ft_free(&res);
-		res = temp;
+		if (!res[fd])
+			res[fd] = ft_strdup("");
+		temp = ft_strjoin(res[fd], buff);
+		ft_free(&res[fd]);
+		res[fd] = temp;
 		if (ft_strchr(buff, '\n'))
 			break ;
 	}
 	ft_free(&buff);
-	if (bytes < 0 || (bytes == 0 && !res))
+	if (bytes < 0 || (bytes == 0 && !res[fd]))
 		return (0);
-	return (get_newline(&res));
+	return (get_newline(&res[fd]));
 }
-
-// #include <stdio.h>
-// #include <fcntl.h>
-// int main()
-// {make 
-// 	int fd;
-// 	char *s;
-
-// 	fd = 0;
-// 	while ((s = get_next_line(fd)))
-// 		printf("%s\n", s);
-// }
-// int	main()
-// {
-//     int fd = open("test.txt", O_RDONLY);
-// 	printf("%s",get_next_line(fd));
-// 	printf("\n second run ------------------------- \n");
-// 	printf("%s\n",get_next_line(fd));
-// 	printf("\n third run ------------------------- \n");
-// 	printf("%s\n",get_next_line(fd));
-// }
