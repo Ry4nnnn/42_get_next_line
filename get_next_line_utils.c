@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: welim <welim@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/22 14:24:33 by welim             #+#    #+#             */
+/*   Updated: 2022/04/22 14:24:35 by welim            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 //calculate the length of the string
@@ -21,7 +33,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	i;
 
 	len = ft_strlen(s1) + ft_strlen(s2);
-	res = (char *)malloc(len + 1);
+	res = (char *)malloc(sizeof(char) * len + 1);
 	if (!res)
 		return (NULL);
 	i = 0;
