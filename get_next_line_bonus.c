@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: welim <welim@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/22 16:06:21 by welim             #+#    #+#             */
-/*   Updated: 2022/04/22 16:06:23 by welim            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "get_next_line_bonus.h"
 
 //this function allocates memory and duplicate a string
@@ -91,6 +79,11 @@ static char	*get_newline(char **str)
 // main function of get next line
 // check if buffer size is more then 0
 // use ft_read function to read from a fd
+//read the fd by the buff size while its not the end
+//check the buff size if there is any new lines
+//if there is, stop reading and trim the buffer and return it
+//it will continue reading if there is no new line
+//return null for error handling or end of file reached
 char	*get_next_line(int fd)
 {
 	int			bytes;
